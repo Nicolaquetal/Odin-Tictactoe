@@ -10,14 +10,16 @@
 </head>
 <body>
     <div class="header">
-        <div class="menu">Menu</div>
+        <button class="menu">MENU</button>
+        
     </div>
     <div class="content">
         <div class="left">
-            <div class="playername">JeanMichel</div>
-            <div class="playerscore">0</div>
+            <div class="playername" id="nameP1">JeanMichel</div>
+            <div class="playerscore" id="scoreP1">0</div>
         </div>
         <div class="middle">
+            <div id="roundcount">ROUND 1/Y</div>
             <div class="gameboard">
                 <div class="case" id="case0"></div>
                 <div class="case" id="case1"></div>
@@ -29,10 +31,69 @@
                 <div class="case" id="case7"></div>
                 <div class="case" id="case8"></div>
             </div>
+            <div class="endRoundMenu">
+                <div class="resultat">ROUND RESULT</div>
+                <div class="resultat resultatRound"></div>
+                <button class="play formbtn" id="btnround"><b>Continue</b></button>
+            </div>
+            <div class="endGameMenu">
+                <div class="resultat">GAME  RESULT</div>
+                <div class="resultat resultatGame"></div>
+                <button class="play formbtn" id="btngame"><b>Continue</b></button>
+            </div>
+            <form class="form" onsubmit="return false">
+                <div class="selecttype">
+                    <fieldset class="typeOfGame">
+                        <legend>Select a type of game</legend>
+                        <div>
+                          <input type="radio" id="PVP" name="type" value="PVP"
+                                 checked>
+                          <label for="PVP">Player vs Player</label>
+                        </div>
+                    
+                        <div>
+                          <input type="radio" id="PVE" name="type" value="PVE">
+                          <label for="PVE">Player vs AI</label>
+                        </div>
+                    </fieldset>
+                    <fieldset class="levelAI">
+                        <legend>Select AI level</legend>
+                        <div>
+                          <input type="radio" id="one" name="level" value="one"
+                                 checked>
+                          <label for="one">Level 1</label>
+                        </div>
+                    
+                        <div>
+                          <input type="radio" id="two" name="level" value="two">
+                          <label for="two">Level 2</label>
+                        </div>
+                        <div>
+                            <input type="radio" id="three" name="level" value="three">
+                            <label for="three">Level 3</label>
+                          </div>
+                    </fieldset>
+                </div>
+ 
+                <label for="p1"><b>Player1:</b></label>
+                <input type="text" class="forminput" name="p1" id="p1">
+
+                <label for="p2"><b>Player2:</b></label>
+                <input type="text" class="forminput" name="p2" id="p2">
+    
+
+                <label for="rounds"><b>Number of Rounds</b></label>
+                <input type="number" class="forminput" name="rounds" id="rounds">
+
+
+                <button class="play formbtn" id="play"><b>Play!</b></button>
+                <button class="closeMenu formbtn"><b>Close</b></button>
+            </form>
+            
         </div>
         <div class="right">
-            <div class="playername">JeanMichel</div>
-            <div class="playerscore">0</div>
+            <div class="playername" id="nameP2">JeanMichel</div>
+            <div class="playerscore" id="scoreP2">0</div>
         </div>
     </div>
     

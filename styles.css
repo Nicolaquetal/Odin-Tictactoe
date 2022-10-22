@@ -34,11 +34,85 @@ body{
     flex:3;
     height: 100%;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    justify-content:flex-start;
     align-items: center;
     
 }
-
+.form{
+    display: none;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 500px;
+    height: 600px;
+    position: absolute;
+    top: 300px;
+    left: 650px;
+    padding: 20px;
+    border-radius: 20px;
+    background-color:rgb(34, 32, 32);
+    color:white;
+    font-size: large;
+    z-index: 10;
+}
+.formbtn{
+    width: auto;
+    height: 50px;
+    border-radius: 25px;
+    font-size: xx-large;
+    border-color: rgb(233, 7, 101);
+}
+.forminput{
+    width: auto;
+    height: 50px;
+    border-radius: 10px;
+    border: solid 2px;
+    font-size: xx-large;
+    text-align: center;
+    border-color: rgb(233, 7, 101);
+}
+.selecttype{
+    display: flex;
+    justify-content: space-between;
+}
+.typeOfGame{
+    flex: 1;
+    border-color: rgb(233, 7, 101);
+}
+.levelAI{
+    display: none;
+    flex-direction: column;
+    flex: 1;
+    border-color: rgb(233, 7, 101);
+}
+.endRoundMenu, .endGameMenu{
+    flex-direction: column;
+    justify-content: space-around;
+    width: 500px;
+    height: 600px;
+    position: absolute;
+    top: 300px;
+    left: 650px;
+    padding: 20px;
+    border-radius: 20px;
+    background-color:rgb(34, 32, 32);
+    color:white;
+    align-items: center;
+    font-size: 50px;
+    z-index: 5;
+}
+.endRoundMenu{
+    display: none;
+}
+.endGameMenu{
+    display: none;
+}
+#roundcount{
+    color: blanchedalmond;
+    font-size: 75px;
+    padding: 50px;
+    
+}
 .gameboard{
     width: 454px;
     display: grid;
@@ -63,5 +137,9 @@ body{
 }
 .menu{
     color: blanchedalmond;
+    background-color: rgb(49, 48, 48);
+    width:500px;
+    border-radius: 20px;
     font-size: 100px;
+    border-color: rgb(233, 7, 101);
 }
