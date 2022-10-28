@@ -45,6 +45,7 @@ const boardgame = (()=>{
       }
       else{
         turnCounter+=1;
+        console.log("turnecounter "+turnCounter)
         if (turnCounter == 9) {winner = "Egality";};
       }    
     }
@@ -84,8 +85,9 @@ const round = (()=>{
               boardgame.add(currentplayer.getSign(),pos)
               boardgame.addtoboard(currentplayer.getSign(),currentdiv)
               Inplay=true;
+              boardgame.checkWinner();
             }
-            boardgame.checkWinner();
+            
             if (boardgame.getWinner()==="no"){
                 turn =(turn+1)%2
                 currentplayer = players[turn];
@@ -128,7 +130,7 @@ const round = (()=>{
         }))
       
     }
-    const playRoundPVE = (players,firstP,Nbround)=>{
+    const playRoundPVE = (players,firstP,Nbround,AIlevel)=>{
       
         boardgame.cleanBoardandWin();
         let Inplay=true;
@@ -139,7 +141,8 @@ const round = (()=>{
         let currentplayer = players[firstP];
         if(firstRounP== 1 && currentRound==0){
           console.log("if1");
-          AI.playAIturn(boardgame.getBoard(),players[turn]);
+          AI.playAIturn(boardgame.getBoard(),players[turn],AIlevel);
+          
           turn =0;
           currentplayer = players[turn];
           console.log("aapres 1 tour AI " +boardgame.getBoard())
@@ -161,16 +164,16 @@ const round = (()=>{
                   boardgame.add(players[0].getSign(),pos)
                   boardgame.addtoboard(players[0].getSign(),currentdiv)
                   Inplay=true;
+                  boardgame.checkWinner();
                 }
               
-              boardgame.checkWinner();
+              
               if (boardgame.getWinner()==="no" && Inplay){
                 
                   turn =(turn+1)%2 
                   currentplayer = players[turn];
                   
-                  AI.playAIturn(boardgame.getBoard(),players[turn]);
-                  boardgame.checkWinner();
+                  AI.playAIturn(boardgame.getBoard(),players[turn],AIlevel);
                   if (boardgame.getWinner()==="no"){
                       turn =(turn+1)%2
                       currentplayer = players[turn];
@@ -273,43 +276,95 @@ const round = (()=>{
 })();
 
 const AI = (() =>{
-    const playAIturn = (currentboardgame,player2)=>{
-        z = StrategyAI1(currentboardgame);
+    const playAIturn = (currentboardgame,player2,AIlevel)=>{
+        let z = 0;
+        switch(AIlevel){
+          case 1:
+            z = StrategyAI1(currentboardgame);
+            break;
+          case 2:
+            z = StrategyAI2(currentboardgame);
+            break;
+          case 3:
+            z = StrategyAI3(currentboardgame);
+            break;  
+        }
         const currentdiv2 = document.getElementById("case"+z);
         boardgame.add(player2.getSign(),z);
         boardgame.addtoboard(player2.getSign(),currentdiv2); 
+        boardgame.checkWinner()
+    }
+    const checkLine =(a,b,c,y,z)=>{
+      if(a==y &&b==y&& c !=z){return 2;}
+      else if(a==y&& b!=z &&c==y){return 1;}
+      else if (a!=z && b==y &&c==y){return 0;}
+      else {return-1;}
+    }
+    const boardLines = ()=>{
+      return [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]]
+    }
+    
+    const getBoardFreeCases =(currentboardgame)=>{
+      let freeCase=[];
+      for(i=0;i<9;i++){
+        if(currentboardgame[i]!=="X" &&currentboardgame[i]!=="O" ){
+          freeCase.push(i);
+        }
+      }
+      return freeCase;
     }
     const StrategyAI1 = (currentboardgame)=>{
-        let played = 0;
-        let result =0;
-        let i =0;
-        while(played===0){
-            if(currentboardgame[i]!=="X" &&currentboardgame[i]!=="O" ){
-                result = i;
-                played = 1;
-            }
-            else{
-                i+=1;
-            }
-        }
-        return result;
+      let freeCase = getBoardFreeCases(currentboardgame);
+      return freeCase[Math.floor(Math.random() * freeCase.length)];
+    }
+    
+    const StrategyAI2 = (currentboardgame)=>{
+      let lines=boardLines();
+      for(i=0;i<8;i++){
+          canIwin=checkLine(currentboardgame[lines[i][0]],currentboardgame[lines[i][1]],currentboardgame[lines[i][2]],"O","X")
+          if (canIwin != -1) {return lines[i][canIwin];}
+      }
+      for(i=0;i<8;i++){
+        canInotLose=checkLine(currentboardgame[lines[i][0]],currentboardgame[lines[i][1]],currentboardgame[lines[i][2]],"X","O")
+        if (canInotLose != -1) {return lines[i][canInotLose];}
+      } 
+      let freeCase = getBoardFreeCases(currentboardgame);
+      return freeCase[Math.floor(Math.random() * freeCase.length)];
+    }
+
+    const StrategyAI3 = (currentboardgame)=>{
+      let played = 0;
+      let result =0;
+      let i =0;
+      while(played===0){
+          if(currentboardgame[i]!=="X" &&currentboardgame[i]!=="O" ){
+              result = i;
+              played = 1;
+          }
+          else{
+              i+=1;
+          }
+      }
+      return result;
     }
     return {playAIturn};
 })();
 
 const game = (()=>{
 
-  const launchGame = (nameP1,nameP2, type, firstP, Nbround)=>{
+  const launchGame = (nameP1,nameP2, type, firstP, Nbround,AIlevel)=>{
     let turn = firstP;
     const player1 = player(nameP1, "X");
     const player2 = player(nameP2, "O");
     const players = [player1,player2];
+    players[0].resetScore();
+    players[1].resetScore();
     display.displayScore(players[0].getScore(),players[1].getScore())
     if(type==="PVP"){
       round.playRoundPVP(players,turn, Nbround);
     }
     else{
-      round.playRoundPVE(players,turn, Nbround);
+      round.playRoundPVE(players,turn, Nbround,AIlevel);
     }
   }
  
@@ -320,7 +375,9 @@ return{launchGame}
 const display = (()=>{
 
   const displayMainMenu = ()=>{
-    let typeSelected ="PVE";
+    let typeSelected ="PVP";
+    let firstPlayer=0;
+    let AIlevel=1;
     const menuBTN = document.querySelector(".menu");
     menuBTN.addEventListener('click',openForm)
     const closeBTN = document.querySelector(".closeMenu");
@@ -331,14 +388,27 @@ const display = (()=>{
     radioPVP.addEventListener('change',PVEunchecked)
     const playBTN = document.querySelector("#play");
     playBTN.addEventListener('click',play)
+    const radioP1 = document.querySelector("#P1")
+    radioP1.addEventListener('change',()=>{firstPlayer=0})
+    const radioP2 = document.querySelector("#P2")
+    radioP2.addEventListener('change',()=>{firstPlayer=1})
+
+    const level1 = document.querySelector("#one")
+    level1.addEventListener('change',()=>{AIlevel=1})
+    const level2 = document.querySelector("#two")
+    level2.addEventListener('change',()=>{AIlevel=2})
+    const level3 = document.querySelector("#three")
+    level3.addEventListener('change',()=>{AIlevel=3})
+    
 
     function play (){
+      boardgame.cleanBoardandWin();
       const name1 = document.querySelector("#p1").value
       const name2 = document.querySelector("#p2").value
       /*const firstp = document.querySelector("#p2").value*/
       const roundnb = document.querySelector("#rounds").value
       displayName(name1,name2);
-      game.launchGame(name1,name2 ,typeSelected,1,roundnb);
+      game.launchGame(name1,name2 ,typeSelected,firstPlayer,roundnb,AIlevel);
       document.querySelector(".form").style.display = "none"; 
     }
 
@@ -355,6 +425,7 @@ const display = (()=>{
     }
     function PVEunchecked(){
       document.querySelector(".levelAI").style.display = "none";
+      document.querySelector("#p2").value= ""
       typeSelected ="PVP";
     }
   }
