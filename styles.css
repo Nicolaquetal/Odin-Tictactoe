@@ -85,7 +85,7 @@ body{
     flex: 1;
     border-color: rgb(233, 7, 101);
 }
-.endRoundMenu, .endGameMenu{
+.endRoundMenu, .endGameMenu, .CaseOccupied{
     flex-direction: column;
     justify-content: space-around;
     width: 500px;
@@ -105,6 +105,9 @@ body{
     display: none;
 }
 .endGameMenu{
+    display: none;
+}
+.CaseOccupied{
     display: none;
 }
 #roundcount{
