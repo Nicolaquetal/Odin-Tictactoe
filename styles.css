@@ -144,9 +144,13 @@ body{
     font-size: 75px;
     font-weight: 900;
 }
-.playername, .playerscore{
+.playername{
     color: blanchedalmond;
     font-size: 40px;
+}
+.playerscore{
+    color: blanchedalmond;
+    font-size: 60px; 
 }
 .menu{
     color: blanchedalmond;

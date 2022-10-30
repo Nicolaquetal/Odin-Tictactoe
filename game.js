@@ -30,6 +30,7 @@ const boardgame = (()=>{
       turnCounter =0;
       const err = document.querySelectorAll('.removable');
       err.forEach((z)=>{z.remove();}) 
+      
     }
 
   
@@ -131,8 +132,11 @@ const round = (()=>{
       
     }
     const playRoundPVE = (players,firstP,Nbround,AIlevel)=>{
-      
+        console.log("fonction PVE entree");
+        console.log(boardgame.getBoard());
         boardgame.cleanBoardandWin();
+        console.log("avant if1");
+        console.log(boardgame.getBoard());
         let Inplay=true;
         let firstRounP=firstP;
         let turn=firstP;
@@ -141,6 +145,8 @@ const round = (()=>{
         let currentplayer = players[firstP];
         if(firstRounP== 1 && currentRound==0){
           console.log("if1");
+          console.log(boardgame.getBoard());
+          
           AI.playAIturn(boardgame.getBoard(),players[turn],AIlevel);
           
           turn =0;
@@ -189,11 +195,11 @@ const round = (()=>{
                     }
                     else{
                       if((currentRound%2==0 && firstP==1)||(currentRound%2==1 && firstP==0)){
-                        display.displayEndRoundMenu(result,1,players[1])
+                        display.displayEndRoundMenu(result,1,players[1],AIlevel)
                         turn+=1
                       }
                       else{
-                        display.displayEndRoundMenu(result,0," ");
+                        display.displayEndRoundMenu(result,0," ",AIlevel);
                       }
                       display.displayRound(currentRound+1,Nbround);
                     }
@@ -214,11 +220,11 @@ const round = (()=>{
                     }
                     else{
                       if((currentRound%2==0 && firstP==1)||(currentRound%2==1 && firstP==0)){
-                        display.displayEndRoundMenu(result,1,players[1])
+                        display.displayEndRoundMenu(result,1,players[1],AIlevel)
                         turn+=1
                       }
                       else{
-                        display.displayEndRoundMenu(result,0," ");
+                        display.displayEndRoundMenu(result,0," ",AIlevel);
                       }
                       display.displayRound(currentRound+1,Nbround);
                     }
@@ -236,11 +242,11 @@ const round = (()=>{
                 }
                 else{
                   if((currentRound%2==0 && firstP==1)||(currentRound%2==1 && firstP==0)){
-                    display.displayEndRoundMenu(result,1,players[1])
+                    display.displayEndRoundMenu(result,1,players[1],AIlevel)
                     turn+=1
                   }
                   else{
-                    display.displayEndRoundMenu(result,0," ");
+                    display.displayEndRoundMenu(result,0," ",AIlevel);
                   }
                   display.displayRound(currentRound+1,Nbround);
                 }
@@ -260,11 +266,11 @@ const round = (()=>{
                 }
                 else{
                   if((currentRound%2==0 && firstP==1)||(currentRound%2==1 && firstP==0)){
-                    display.displayEndRoundMenu(result,1,players[1])
+                    display.displayEndRoundMenu(result,1,players[1],AIlevel)
                     turn+=1
                   }
                   else{
-                    display.displayEndRoundMenu(result,0," ");
+                    display.displayEndRoundMenu(result,0," ",AIlevel);
                   }
                   display.displayRound(currentRound+1,Nbround);
                 }
@@ -303,6 +309,14 @@ const AI = (() =>{
     const boardLines = ()=>{
       return [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]]
     }
+    const equaltab =(tab1,tab2)=>{
+      for(i=0;i<9;i++){
+        if (tab1[i]!=tab2[i]){
+          return false;
+        }
+      }
+      return true;
+    }
     
     const getBoardFreeCases =(currentboardgame)=>{
       let freeCase=[];
@@ -319,6 +333,8 @@ const AI = (() =>{
     }
     
     const StrategyAI2 = (currentboardgame)=>{
+      
+      
       let lines=boardLines();
       for(i=0;i<8;i++){
           canIwin=checkLine(currentboardgame[lines[i][0]],currentboardgame[lines[i][1]],currentboardgame[lines[i][2]],"O","X")
@@ -333,19 +349,43 @@ const AI = (() =>{
     }
 
     const StrategyAI3 = (currentboardgame)=>{
-      let played = 0;
-      let result =0;
-      let i =0;
-      while(played===0){
-          if(currentboardgame[i]!=="X" &&currentboardgame[i]!=="O" ){
-              result = i;
-              played = 1;
-          }
-          else{
-              i+=1;
-          }
+      let currentboardgameS3 =[]
+      for(i=0;i<9;i++){
+        
+        currentboardgameS3[i]=currentboardgame[i]
+    }
+    console.log("AI3") 
+    console.log(currentboardgameS3)
+      
+      
+      if(equaltab(currentboardgameS3 ,["0","1","2","3","4","5","6","7","8"])||equaltab(currentboardgameS3 ,["X","1","2","3","4","5","6","7","8"])||equaltab(currentboardgameS3 ,["0","1","X","3","4","5","6","7","8"])||equaltab(currentboardgameS3 ,["0","1","2","3","4","5","X","7","8"])||equaltab(currentboardgameS3 ,["0","1","2","3","4","5","6","7","X"])||equaltab(currentboardgameS3 ,["0","X","2","3","4","5","6","7","8"])||equaltab(currentboardgameS3 ,["0","1","2","X","4","5","6","7","8"])||equaltab(currentboardgameS3 ,["0","1","2","3","4","X","6","7","8"])||equaltab(currentboardgameS3 ,["0","1","2","3","4","5","6","X","8"])){
+        return 4;
       }
-      return result;
+      else if(equaltab(currentboardgameS3 ,["0","1","2","X","O","5","6","7","8"]) ||equaltab(currentboardgameS3 ,["0","1","2","3","O","5","6","X","8"] )||equaltab(currentboardgameS3 ,["0","1","X","3","O","5","O","X","8"] )||equaltab(currentboardgameS3 ,["0","1","O","3","O","X","X","7","8"] )||equaltab(currentboardgameS3 ,["O","1","2","3","O","5","6","7","X"])||equaltab(currentboardgameS3 ,["0","1","X","X","O","5","6","7","8"]) ||equaltab(currentboardgameS3 ,["0","X","2","3","O","5","X","7","8"])||equaltab(currentboardgameS3 ,["0","X","2","X","O","5","6","7","8"])||equaltab(currentboardgameS3 ,["0","1","2","X","O","X","6","7","8"])) {
+        return 0;
+      }
+      else if(equaltab(currentboardgameS3 ,["X","1","2","3","O","5","6","7","X"])||equaltab(currentboardgameS3 ,["0","1","X","3","O","5","X","7","8"])){
+        return 1;
+      }
+      else if(equaltab(currentboardgameS3 ,["0","X","2","3","O","5","6","7","8"]) ||equaltab(currentboardgameS3 ,["O","1","2","X","O","5","6","7","X"] )||equaltab(currentboardgameS3 ,["0","1","2","3","O","X","6","7","8"] )||equaltab(currentboardgameS3 ,["0","1","O","3","O","5","X","7","8"] )||equaltab(currentboardgameS3 ,["0","1","2","3","X","5","6","7","8"])||equaltab(currentboardgameS3 ,["0","X","2","3","O","5","6","X","8"])||equaltab(currentboardgameS3 ,["0","X","2","3","O","5","6","7","X"])||equaltab(currentboardgameS3 ,["0","X","2","3","O","X","6","7","8"])||equaltab(currentboardgameS3 ,["X","1","2","3","O","X","6","7","8"])){
+        return 2;
+      }
+      else if(equaltab(currentboardgameS3 ,["X","1","2","3","O","5","6","X","O"])){
+        return 5;
+      }
+      else if(equaltab(currentboardgameS3 ,["O","1","2","3","O","5","6","X","X"] )||equaltab(currentboardgameS3 ,["0","1","X","3","O","5","6","7","8"]) ||equaltab(currentboardgameS3 ,["O","X","2","3","O","5","6","7","X"])||equaltab(currentboardgameS3 ,["0","1","2","X","O","5","6","X","8"])||equaltab(currentboardgameS3 ,["0","1","2","X","O","5","6","7","X"])||equaltab(currentboardgameS3 ,["X","1","2","3","O","5","6","X","8"]) ){
+        return 6;
+      }
+      else if(equaltab(currentboardgameS3 ,["X","1","2","3","O","X","6","7","O"])){
+        return 7;
+      }
+      else if(equaltab(currentboardgameS3 ,["X","1","2","3","O","5","6","7","8"]) ||equaltab(currentboardgameS3 ,["0","1","X","X","O","5","O","7","8"]) ||equaltab(currentboardgameS3 ,["0","X","O","3","O","5","X","7","8"] )||equaltab(currentboardgameS3 ,["0","1","O","3","X","5","X","7","8"])||equaltab(currentboardgameS3 ,["0","1","X","3","O","5","6","X","8"])||equaltab(currentboardgameS3 ,["0","1","2","3","O","X","X","7","8"])||equaltab(currentboardgameS3 ,["0","1","2","3","O","X","6","X","8"])){
+        return 8;
+      }
+      else{
+        
+        return StrategyAI2(currentboardgameS3);
+      }
     }
     return {playAIturn};
 })();
@@ -360,6 +400,8 @@ const game = (()=>{
     players[0].resetScore();
     players[1].resetScore();
     display.displayScore(players[0].getScore(),players[1].getScore())
+    console.log("fonction launchgame");
+    console.log(boardgame.getBoard());
     if(type==="PVP"){
       round.playRoundPVP(players,turn, Nbround);
     }
@@ -403,9 +445,11 @@ const display = (()=>{
 
     function play (){
       boardgame.cleanBoardandWin();
+      console.log("fonction play");
+      console.log(boardgame.getBoard());
+      
       const name1 = document.querySelector("#p1").value
       const name2 = document.querySelector("#p2").value
-      /*const firstp = document.querySelector("#p2").value*/
       const roundnb = document.querySelector("#rounds").value
       displayName(name1,name2);
       game.launchGame(name1,name2 ,typeSelected,firstPlayer,roundnb,AIlevel);
@@ -429,14 +473,14 @@ const display = (()=>{
       typeSelected ="PVP";
     }
   }
-  const displayEndRoundMenu = (result,AIbegin,player)=>{
+  const displayEndRoundMenu = (result,AIbegin,player,AIlevel)=>{
     document.querySelector(".resultatRound").textContent=result;
     document.querySelector(".endRoundMenu").style.display = "flex";
     const menuBTNRound = document.querySelector("#btnround");
     menuBTNRound.addEventListener('click',()=>{
       boardgame.cleanBoardandWin();
       document.querySelector(".endRoundMenu").style.display = "none";
-      AIbegin == 1 ? AI.playAIturn(["0","1","2","3","4","5","6","7","8"],player):console.log('');
+      AIbegin == 1 ? AI.playAIturn(["0","1","2","3","4","5","6","7","8"],player,AIlevel):console.log('');
     })
   }
 
@@ -475,12 +519,3 @@ const display = (()=>{
 })(); 
 display.displayMainMenu();
 
-/*game.launchGame("Xavier","Olivier" ,"PVP",0,2);*/
-
-
-/*
-let turn = 1;
-const player1 = player("Xavier" , "X" );
-const player2 = player("Olivier" , "O");
-const players = [player1,player2];
-round.playRoundPVE(players,turn);*/
